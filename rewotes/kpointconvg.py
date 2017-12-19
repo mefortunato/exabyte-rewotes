@@ -144,8 +144,8 @@ class KPointConvg(object):
             cmd = [mpi_prefix, '-np', str(nproc), self.PW_EXEC, '-inp', input_file]
         else:
             cmd = [self.PW_EXEC, '-inp', input_file]
-        print('running with k=[{} {} {}]...\r'.format(k1, k2, k3), end='')
-        p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        print('running with k=[{} {} {}]...'.format(k1, k2, k3))
+        p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         stdo, stde = p.communicate()
         
         with open(save_output, 'w') as f:
