@@ -1,11 +1,26 @@
 from __future__ import print_function
 
+import os
+import sys
 import numpy as np
 import pandas as pd
 from subprocess import Popen, PIPE
 
 
+class KPointConvgException(Exception):
+    pass
+
+
 class System(object):
+    """rewotes.kpointconvg.System
+
+    System class defining a crystal structure for DFT calculation.
+    
+    Attributes:
+        species: atomic species list of dict objects defining {'name': str, 'mass': float, 'potential': str}
+        atoms: list of atoms dict objects defining {'species': species, 'coordinates': ndarray(shape=(3,))}
+        cell: ndarray(shape=(3,)) of cell vectors
+    """
     def __init__(self, species=None, atoms=None, cell=None):
         self.species = species
         self.atoms = atoms
@@ -19,6 +34,17 @@ class System(object):
             self.cell = np.zeros(shape=(3,3))
         
     def read_poscar(self, fname):
+        """rewotes.kpointconvg.System.read_poscar
+
+        Iterates through s.bonds, s.angles, s.dihedrals, and s.impropers and removes
+        those which contain this :class:`~pysimm.system.Particle`.
+
+        Args:
+            s: :class:`~pysimm.system.System` object from which bonding objects will be removed
+
+        Returns:
+            None
+        """
         with open(fname) as f:
             for _ in range(2):
                 line = f.next()
@@ -44,6 +70,8 @@ class System(object):
                 
         
     def add_species(self, name, mass, potential):
+        if not os.path.isfile(os.path.join('pseudo', potential)):
+            raise KPointConvgException('Cannot find pseudopotential file {} in pseudo dir'.format(potential))
         species = {
             'name': name,
             'mass': mass,
