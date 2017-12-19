@@ -36,11 +36,10 @@ class System(object):
     def read_poscar(self, fname):
         """rewotes.kpointconvg.System.read_poscar
 
-        Iterates through s.bonds, s.angles, s.dihedrals, and s.impropers and removes
-        those which contain this :class:`~pysimm.system.Particle`.
+        Read atom species names, atom coorindates and cell dimensions from poscar file format.
 
         Args:
-            s: :class:`~pysimm.system.System` object from which bonding objects will be removed
+            fname: path to poscar file
 
         Returns:
             None
@@ -64,12 +63,23 @@ class System(object):
                         species = sp
                         break
                 if species is None:
-                    print('cannot find species {} in system'.format(line[-1]))
-                    return None
+                    raise KPointConvgException('Cannot find species {} in system'.format(line[-1]))
                 self.add_atom(species=species, coordinates=map(float, line[:3]))
                 
         
     def add_species(self, name, mass, potential):
+        """rewotes.kpointconvg.System.add_species
+
+        Adds atomic species to System.species.
+
+        Args:
+            name: species name (str)
+            mass: mass of atomic species (float)
+            potential: name of pseudopotential file located in directory names pseudo (str)
+
+        Returns:
+            Dictionary representing species for reference later
+        """
         if not os.path.isfile(os.path.join('pseudo', potential)):
             raise KPointConvgException('Cannot find pseudopotential file {} in pseudo dir'.format(potential))
         species = {
@@ -81,6 +91,17 @@ class System(object):
         return species
         
     def add_atom(self, species, coordinates):
+        """rewotes.kpointconvg.System.add_species
+
+        Adds atom to System.atoms.
+
+        Args:
+            species: dictionary representing species (should have been added to system already and contain 'name')
+            coordinates: array of length 3 with fractional coordinates of atom
+
+        Returns:
+            Dictionary representing atom for reference later
+        """
         atom = {
             'species': species,
             'x': coordinates[0],
@@ -91,6 +112,16 @@ class System(object):
         return atom
 
     def write_input(self):
+        """rewotes.kpointconvg.System.write_input
+
+        Formats string formatted as input for Quantum ESPRESSO
+
+        Args:
+            None
+
+        Returns:
+            Input string
+        """
         s = 'ATOMIC_SPECIES\n'
         for sp in self.species:
             s += '{name} {mass} {potential}\n'.format(**sp)
