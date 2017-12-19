@@ -76,7 +76,7 @@ class System(object):
         return s
         
 
-class KSpaceConvg(object):
+class KPointConvg(object):
     def __init__(self, system=None, kmin=1, kmax=10, PW_EXEC='pw.x', kinetic_cutoff=40):
         self.system = system
         self.kmin = kmin
