@@ -47,17 +47,17 @@ class System(object):
         """
         with open(fname) as f:
             for _ in range(2):
-                line = f.next()
+                line = next(f)
             self.cell = np.zeros(shape=(3,3))
             for n in range(3):
-                line = f.next()
-                self.cell[n] = map(float, line.split())
-            line = f.next()
-            line = f.next()
-            natoms = np.array(map(int, line.split())).sum()
-            line = f.next()
+                line = next(f)
+                self.cell[n] = list(map(float, line.split()))
+            line = next(f)
+            line = next(f)
+            natoms = np.array(list(map(int, line.split()))).sum()
+            line = next(f)
             for n in range(natoms):
-                line = f.next().split()
+                line = next(f).split()
                 species = None
                 for sp in self.species:
                     if sp['name'] == line[-1]:
@@ -65,7 +65,7 @@ class System(object):
                         break
                 if species is None:
                     raise KPointConvgException('Cannot find species {} in system'.format(line[-1]))
-                self.add_atom(species=species, coordinates=map(float, line[:3]))
+                self.add_atom(species=species, coordinates=list(map(float, line[:3])))
                 
         
     def add_species(self, name, mass, potential):
@@ -219,9 +219,12 @@ class KPointConvg(object):
         m = re.search(r'!.*total energy.*=(.+?)Ry', stdo)
         E_Ry = float(m.group(1)) if m else None
         
+        m = re.search('P=(.+?)\n', stdo)
+        press = float(m.group(1)) if m else None
+        
         if E_Ry is not None:
             E_eV = E_Ry/13.605698066
-            self.data = self.data.append({'k1': k1, 'k2': k2, 'k3': k3, 'E_Ry': E_Ry, 'E_eV': E_eV}, ignore_index=True)
+            self.data = self.data.append({'k1': k1, 'k2': k2, 'k3': k3, 'E_Ry': E_Ry, 'E_eV': E_eV, 'pressure': press}, ignore_index=True)
             
     def find_convg(self, criteria='E_eV', tol=0.00001, debug=False, nproc=1, mpi_prefix='mpiexec'):
         for i in range(self.kmin, self.kmax+1):
