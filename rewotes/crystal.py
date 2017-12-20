@@ -78,7 +78,7 @@ class System(object):
             Dictionary representing species for reference later
         """
         if not os.path.isfile(os.path.join('pseudo', potential)):
-            raise KPointConvgException('Cannot find pseudopotential file {} in pseudo dir'.format(potential))
+            raise CrystalException('Cannot find pseudopotential file {} in pseudo dir'.format(potential))
         species = {
             'name': name,
             'mass': mass,
