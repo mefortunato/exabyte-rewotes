@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import re
 import sys
 import numpy as np
 import pandas as pd
@@ -215,13 +216,12 @@ class KPointConvg(object):
             print(stdo)
             print(stde)
         
-        lines = stdo.split('\n')
-        E_Ry = None
-        for line in lines:
-            if line.startswith('!    total energy'):
-                E_Ry = float(line.split('=')[1].split('Ry')[0].strip())
+        m = re.search(r'!.*total energy.*=(.+?)Ry', stdo)
+        E_Ry = float(m.group(1)) if m else None
+        
         if E_Ry is not None:
-            self.data = self.data.append({'k1': k1, 'k2': k2, 'k3': k3, 'E_Ry': E_Ry, 'E_eV': E_Ry/13.605698066}, ignore_index=True)
+            E_eV = E_Ry/13.605698066
+            self.data = self.data.append({'k1': k1, 'k2': k2, 'k3': k3, 'E_Ry': E_Ry, 'E_eV': E_eV}, ignore_index=True)
             
     def find_convg(self, criteria='E_eV', tol=0.00001, debug=False, nproc=1, mpi_prefix='mpiexec'):
         for i in range(self.kmin, self.kmax+1):
