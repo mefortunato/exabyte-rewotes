@@ -15,7 +15,7 @@ class KPointConvg(object):
         self.kmax = kmax
         self.data = pd.DataFrame(columns=['k1', 'k2', 'k3'])
         
-    def find_convg(self, criteria='E_eV', tol=0.00001, debug=False, nproc=1):
+    def find_convg(self, criteria='E_eV', tol=0.00001, debug=False, nproc=1, save_data='kconvg.data'):
         for i in range(self.kmin, self.kmax+1):
             print('running with k=[{} {} {}]...'.format(i, i, i))
             self.calculation.kpoints=[i, i, i]
@@ -26,6 +26,7 @@ class KPointConvg(object):
             if len(self.data) > 1:
                 self.data['delta_{}'.format(criteria)] = self.data.diff()[criteria].abs()
                 if np.any(self.data.loc[self.data['delta_{}'.format(criteria)] < tol]):
+                    kconvg.data.to_csv(save_data, index=False)
                     return list(self.data.loc[self.data['delta_{}'.format(criteria)] < tol, ['k1', 'k2', 'k3']].values[0] - 1)
         print('Did not converge')
         return None
