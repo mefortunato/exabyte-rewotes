@@ -26,7 +26,8 @@ class KPointConvg(object):
             if len(self.data) > 1:
                 self.data['delta_{}'.format(criteria)] = self.data.diff()[criteria].abs()
                 if np.any(self.data.loc[self.data['delta_{}'.format(criteria)] < tol]):
-                    kconvg.data.to_csv(save_data, index=False)
+                    self.data.to_csv(save_data, index=False)
                     return list(self.data.loc[self.data['delta_{}'.format(criteria)] < tol, ['k1', 'k2', 'k3']].values[0] - 1)
+        self.data.to_csv(save_data, index=False)
         print('Did not converge')
         return None
