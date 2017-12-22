@@ -56,6 +56,7 @@ class Calculation(object):
     nat = {}
     ntyp = {}
     ecutwfc = {}
+    ecutrho = 200
     occupations = \'smearing\'
     degauss = 0.005
 /
