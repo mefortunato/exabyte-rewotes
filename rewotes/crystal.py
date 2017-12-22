@@ -9,7 +9,7 @@ class CrystalException(Exception):
 
 
 class System(object):
-    """rewotes.kpointconvg.System
+    """rewotes.crystal.System
 
     System class defining a crystal structure for DFT calculation.
     
@@ -31,7 +31,7 @@ class System(object):
             self.cell = np.zeros(shape=(3,3))
         
     def read_poscar(self, fname):
-        """rewotes.kpointconvg.System.read_poscar
+        """rewotes.crystal.System.read_poscar
 
         Read atom species names, atom coorindates and cell dimensions from poscar file format.
 
@@ -65,7 +65,7 @@ class System(object):
                 
         
     def add_species(self, name, mass, potential):
-        """rewotes.kpointconvg.System.add_species
+        """rewotes.crystal.System.add_species
 
         Adds atomic species to System.species.
 
@@ -88,7 +88,7 @@ class System(object):
         return species
         
     def add_atom(self, species, coordinates):
-        """rewotes.kpointconvg.System.add_species
+        """rewotes.crystal.System.add_species
 
         Adds atom to System.atoms.
 
