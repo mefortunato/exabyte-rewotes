@@ -53,7 +53,7 @@ calc = qe.Calculation(system, kinetic_cutoff=40)
 
 The `kpointconvg.KPointConvg` class should then be instantiated by passing the `Calculation` object, and optionally kmin and kmax to search for convergence (defaults: kmin=1, kmax=10):
 ```python
-kconvg = KPointConvg(system=s)
+kconvg = kpointconvg.KPointConvg(calc)
 ```
 
 Call the find_convg() method to search for convergence optionally passing a tolerance (default: 1e-5 eV):
