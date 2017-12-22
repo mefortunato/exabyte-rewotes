@@ -89,6 +89,9 @@ class Calculation(object):
         p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         stdo, stde = p.communicate()
         
+        # TODO
+        # catch exception if qe call unsuccessful
+        
         with open(save_output, 'w') as f:
             f.write(stdo)
             f.write(stde)
