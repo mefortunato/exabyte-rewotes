@@ -97,6 +97,9 @@ class Calculation(object):
             print(stdo)
             print(stde)
             
+        # TODO
+        # catch exception if convergence not achieved
+            
         m = re.search(r'!.*total energy.*=(.+?)Ry', stdo)
         try:
             E_Ry = float(m.group(1))
